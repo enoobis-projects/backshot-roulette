@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>backshot roulette</title>
+  <style>
+    body {
+      background: #0f172a;
+      color: white;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .circle-row {
+      display: flex;
+      gap: 8px;
+      margin-right: 20px;
+    }
+    .circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid white;
+      text-align: center;
+      line-height: 28px;
+      font-weight: bold;
+      user-select: none;
+      cursor: pointer;
+    }
+    .divider {
+      width: 2px;
+      height: 40px;
+      background: white;
+      margin: 0 15px;
+    }
+    .text-input {
+      width: 100px;
+      padding: 4px;
+      background: #1e293b;
+      border: 1px solid #475569;
+      color: white;
+    }
+    .number-input {
+      width: 50px;
+      padding: 4px;
+      margin-left: 8px;
+      background: #1e293b;
+      border: 1px solid #475569;
+      color: white;
+    }
+    .calc-button {
+      margin-left: 8px;
+      padding: 4px 10px;
+      background: #334155;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .chance-output {
+      margin-left: 10px;
+      min-width: 80px;
+    }
+    .add-button {
+      margin-top: 20px;
+      padding: 10px;
+      background: #374151;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div id="container"></div>
+<button class="add-button" onclick="addRow()">Add</button>
+
+<script>
+  function createCircle() {
+    const circle = document.createElement('div');
+    circle.className = 'circle';
+    circle.onmousedown = function (e) {
+      e.preventDefault();
+      if (e.button === 0) {
+        circle.textContent = '−';
+        circle.style.color = '#38bdf8'; 
+      } else if (e.button === 2) {
+        circle.textContent = '+';
+        circle.style.color = 'red';
+      }
+    };
+    circle.oncontextmenu = () => false;
+    return circle;
+  }
+
+  function addRow() {
+    const row = document.createElement('div');
+    row.className = 'row';
+
+    const circleRow = document.createElement('div');
+    circleRow.className = 'circle-row';
+    for (let i = 0; i < 8; i++) circleRow.appendChild(createCircle());
+
+    const divider = document.createElement('div');
+    divider.className = 'divider';
+
+    const textInput = document.createElement('input');
+    textInput.className = 'text-input';
+    textInput.placeholder = 'text';
+
+    const ammoInput = document.createElement('input');
+    ammoInput.className = 'number-input';
+    ammoInput.placeholder = '+';
+    ammoInput.type = 'number';
+    ammoInput.min = '0';
+
+    const blankInput = document.createElement('input');
+    blankInput.className = 'number-input';
+    blankInput.placeholder = '-';
+    blankInput.type = 'number';
+    blankInput.min = '0';
+
+    const calcButton = document.createElement('button');
+    calcButton.className = 'calc-button';
+    calcButton.textContent = 'chance';
+
+    const chanceOut = document.createElement('div');
+    chanceOut.className = 'chance-output';
+
+    calcButton.onclick = function () {
+      const b = parseInt(ammoInput.value) || 0;
+      const h = parseInt(blankInput.value) || 0;
+      const total = b + h;
+      if (total === 0) {
+        chanceOut.textContent = '0%';
+      } else {
+        const chance = (b / total * 100).toFixed(1);
+        chanceOut.textContent = `${chance}%`;
+      }
+    };
+
+    row.appendChild(circleRow);
+    row.appendChild(divider);
+    row.appendChild(textInput);
+    row.appendChild(ammoInput);
+    row.appendChild(blankInput);
+    row.appendChild(calcButton);
+    row.appendChild(chanceOut);
+
+    document.getElementById('container').appendChild(row);
+  }
+
+  for (let i = 0; i < 5; i++) addRow();
+</script>
+
+</body>
+</html>
